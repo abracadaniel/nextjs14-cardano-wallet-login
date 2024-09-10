@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model loginRequests {
+  walletAddress String   @db.VarChar(255)
+  key           String   @db.VarChar(255)
+  requestStamp  DateTime @db.Timestamp(6)
+  expires       DateTime @db.Timestamp(6)
+
+  @@unique([walletAddress, key])
+}
+
+model logins {
+  walletAddress  String   @id(map: "users_walletAddress") @db.VarChar(255)
+  loginKey       String   @db.VarChar(255)
+  loginTimestamp DateTime @db.Timestamp(6)
+  loginExpires   DateTime @db.Timestamp(6)
+
+  @@index([walletAddress, loginKey], map: "logins_walletAddress_loginKey")
+}
